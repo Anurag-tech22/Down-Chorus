@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dawn Chorus: a bird walk with the phone in your pocket</title><meta name="theme-color" content="#1E3A2B">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Newsreader:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/app.css"></head><body>
+<a class="skip" href="#main">Skip to results</a>
+<header><h1>Dawn Chorus</h1><p>Record the walk. Keep the phone away. Let the birds be checked afterwards.</p></header>
+<main id="main">
+<section aria-labelledby="h-walk"><h2 id="h-walk">Your walk</h2>
+<form id="f" novalidate><div class="grid">
+<label>Date<input type="date" id="date" required></label><label>Start time<input type="time" id="start" value="05:45" required></label>
+<label class="wide">Place<input id="place" maxlength="80" placeholder="Hill trail near home"></label>
+<label class="wide">BirdNET result file (CSV)<input type="file" id="file" accept=".csv,text/csv"></label></div>
+<p class="hint">Run your recording through the open-source BirdNET-Analyzer, then add its CSV here. Audio never leaves your device.</p>
+<div class="row"><button class="primary" type="submit">Check my walk</button><button type="button" id="demo">Try the sample walk</button></div>
+<p id="err" role="alert" class="err"></p></form></section>
+<section id="res" hidden aria-labelledby="h-res" aria-live="polite" tabindex="-1">
+<h2 id="h-res">What you heard</h2><p id="sum" class="lead"></p><p id="demoNote" class="hint" hidden>Sample data, written by hand. It is not a real recording.</p>
+<div class="sky" id="sky"></div>
+<ul class="legend"><li><i class="k keep"></i>Kept</li><li><i class="k check"></i>Listen again</li><li><i class="k drop"></i>Dropped</li></ul>
+<h3>Field journal</h3><article id="journal" class="journal"></article>
+<div class="row"><button id="say">Read aloud</button><button id="dl">Save journal</button></div>
+<h3>Outside and on screen</h3><p id="time" class="lead"></p>
+<details><summary>All detections as a table</summary><div class="scroll"><table><caption class="sr">Detections with verdict</caption><thead><tr><th>Bird</th><th>Time</th><th>BirdNET</th><th>Verdict</th><th>Why</th></tr></thead><tbody id="tb"></tbody></table></div></details>
+</section></main>
+<footer>Open models: BirdNET-Analyzer for calls, Gemma for the journal voice. Nothing is stored on the server.</footer>
+<script src="/static/app.js"></script></body></html>

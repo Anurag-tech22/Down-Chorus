@@ -1,0 +1,17 @@
+# One command: docker compose up --build   then open http://localhost:8000
+services:
+  ollama:
+    image: ollama/ollama
+    volumes: [ollama:/root/.ollama]
+  pull-gemma:            # downloads the model once (about 800 MB), then exits
+    image: ollama/ollama
+    depends_on: [ollama]
+    environment: {OLLAMA_HOST: "ollama:11434"}
+    entrypoint: ["sh","-c","until ollama list >/dev/null 2>&1; do sleep 2; done; ollama pull gemma3:1b"]
+    restart: "no"
+  app:
+    build: .
+    depends_on: [ollama]
+    ports: ["8000:10000"]
+    environment: {LLAMA_URL: "http://ollama:11434", LLM_MODEL: "gemma3:1b"}
+volumes: {ollama: {}}

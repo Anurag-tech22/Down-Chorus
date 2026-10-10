@@ -1,0 +1,28 @@
+:root{--bg:#E9EFE4;--card:#F7FAF4;--ink:#1E3A2B;--mut:#4F6558;--line:#B9C8BC;--keep:#2F6B47;--check:#B8741A;--drop:#6B7A72;--dusk:#4E3B63;color-scheme:light dark}
+@media(prefers-color-scheme:dark){:root{--bg:#0E1B16;--card:#16271F;--ink:#E6F0E8;--mut:#A3B8AB;--line:#2D463A;--keep:#7DD3A0;--check:#F0B35A;--drop:#8FA196;--dusk:#C7B2E0}}
+*{box-sizing:border-box}html{font-size:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.6 "Atkinson Hyperlegible",system-ui,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+header,main,footer{max-width:46rem;margin:0 auto;padding:1rem}
+h1{font:italic 400 clamp(2.4rem,9vw,3.6rem)/1.05 Newsreader,Georgia,serif;margin:1.2rem 0 .3rem}header p{margin:0;color:var(--mut);max-width:34rem}
+h2{font-size:1.2rem;margin:1.6rem 0 .6rem}h3{font-size:1rem;margin:1.6rem 0 .4rem}
+section{padding:0}.lead{font-size:1.15rem;margin:.3rem 0}.hint{color:var(--mut);font-size:.9rem;max-width:36rem}.err{color:#B3261E;font-weight:700;min-height:1.4rem}
+@media(prefers-color-scheme:dark){.err{color:#FF8A80}}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.wide{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:.25rem;font-weight:700;font-size:.9rem}
+input{font:inherit;min-height:2.9rem;padding:.4rem .7rem;border:2px solid var(--line);border-radius:.7rem;background:var(--card);color:var(--ink)}
+button{font:inherit;min-height:2.9rem;padding:.4rem 1.1rem;border-radius:.7rem;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;font-weight:700}
+button.primary{background:var(--ink);color:var(--bg)}.row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem}
+:focus-visible{outline:3px solid var(--check);outline-offset:2px}
+.skip{position:absolute;left:-99rem}.skip:focus{left:1rem;top:1rem;background:var(--card);padding:.5rem;z-index:9}.sr{position:absolute;left:-99rem}
+.sky{border-radius:1.2rem;padding:.8rem .6rem;overflow-x:auto;background:linear-gradient(90deg,#1B2540 0%,#4E3B63 35%,#C97B63 70%,#F0C46B 100%);border:2px solid var(--line)}
+.sky svg{display:block;min-width:34rem;width:100%;height:auto}.sky text{fill:#fff;font:12px "Atkinson Hyperlegible",sans-serif}
+.sky .l{stroke:#ffffff33}.dot.keep{fill:#fff;stroke:#fff}.dot.check{fill:#F0B35A;stroke:#fff;stroke-width:2}.dot.drop{fill:none;stroke:#ffffffaa;stroke-width:2;stroke-dasharray:2 2}
+.legend{display:flex;gap:1.2rem;list-style:none;padding:0;margin:.5rem 0;font-size:.9rem}.k{display:inline-block;width:.9rem;height:.9rem;border-radius:50%;margin-right:.4rem;vertical-align:-.1rem;border:2px solid var(--ink)}
+.k.keep{background:var(--ink)}.k.check{background:var(--check);border-color:var(--check)}.k.drop{border-style:dashed;border-color:var(--drop)}
+.journal{font:1.2rem/1.75 Newsreader,Georgia,serif;background:var(--card);border-left:5px solid var(--dusk);padding:1rem 1.2rem;border-radius:.4rem;max-width:36rem}
+details{margin-top:1.5rem}summary{cursor:pointer;font-weight:700;min-height:2.5rem}.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line)}
+td.keep{color:var(--keep);font-weight:700}td.check{color:var(--check);font-weight:700}td.drop{color:var(--drop)}
+footer{color:var(--mut);font-size:.85rem;padding-bottom:2rem}
+@media(max-width:34rem){.grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:no-preference){.dot{animation:in .5s both}@keyframes in{from{opacity:0}}}
