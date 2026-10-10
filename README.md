@@ -83,6 +83,9 @@ pip install -r requirements.txt
 
 # Start the server
 uvicorn app.main:app --reload
+
+# Run tests
+python -m pytest -q && python eval/run.py
 ```
 Open `http://localhost:8000` in your browser and press **"Try the sample walk"**.
 
