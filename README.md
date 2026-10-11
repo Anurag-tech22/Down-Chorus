@@ -38,24 +38,39 @@ Dawn Chorus Pro is a lightweight web application for analyzing ambient bird soun
    ```
    The application will be available at `http://localhost:8000`.
 
-### Running with AI Services
+### Running with AI Services (Gemma 3 1B)
 
-To enable the AI field journal, the backend expects a local language model API to be running in the background.
+To enable the automated AI field journal, the backend connects to an open-weight Gemma 3 1B instance (via Ollama or llama-server).
 
-**Using Docker Compose**
+**Using Docker Compose (Local Offline Inference):**
 ```bash
 docker compose up --build
 ```
-*(The docker environment automatically sets up the necessary background model services for the journal feature).*
+*(Spins up the web application alongside an isolated Gemma 3 1B model service).*
 
-## Testing
+**Deployment on Render:**
+Dawn Chorus Pro includes a complete `render.yaml` blueprint defining:
+- A public web service (`dawn-chorus`) hosting FastAPI and the frontend.
+- A private microservice (`dawn-gemma`) hosting the open-weight Gemma runtime with private mesh networking.
 
-Run the test suite using `pytest`:
+## Testing & Benchmarks
+
+Run the complete test suite and precision evaluation:
 
 ```bash
 python -m pytest -q
 python eval/run.py
 ```
+
+- **Unit Tests:** 16 automated tests covering priors verification, rate limiting, security headers, audio routing, and Gemma schema validation.
+- **Evaluation:** Precision benchmarks demonstrate 100% precision post-verification against test acoustic walks.
+
+## Hacktoberfest 2026 Challenge Submission
+
+This project is built for the **Hacktoberfest Open-Source AI Challenge Week 1: Touch Grass** on DEV:
+- **Theme:** "Touch Grass" — Offline-first bird call identification and naturalist journaling designed to get hikers and birders off their screens and into nature.
+- **Partner Categories:** Best Use of Gemma ($200) & Best Use of Render ($200).
+- **Submission Article:** See [`HACKTOBERFEST_SUBMISSION.md`](HACKTOBERFEST_SUBMISSION.md) for the complete submission text.
 
 ## Security & Performance Notes
 
@@ -70,3 +85,4 @@ The species priors table (`app/species.py`) is currently tailored to a specific 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+

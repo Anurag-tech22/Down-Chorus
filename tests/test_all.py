@@ -22,3 +22,15 @@ def test_row_cap(monkeypatch):
 def test_rate_limit(monkeypatch):
     monkeypatch.setattr(main,"LIMIT",2);codes=[c.get("/api/demo").status_code for _ in range(3)];assert codes==[200,200,429]
 def test_no_docs_exposed():assert c.get("/docs").status_code==404
+def test_audio_endpoint(monkeypatch):
+    class FakeResp:
+        text = "src='https://xeno-canto.org/sounds/uploaded/123.mp3'"
+    class FakeClient:
+        def __init__(self, **kw): pass
+        async def __aenter__(self): return self
+        async def __aexit__(self, *a): pass
+        async def get(self, url, timeout=5): return FakeResp()
+    import httpx
+    monkeypatch.setattr(httpx, "AsyncClient", FakeClient)
+    r = c.get("/api/audio?bird=Common+Myna")
+    assert r.status_code == 200 and r.json()["url"].endswith(".mp3")

@@ -11,7 +11,7 @@ LLAMA=os.getenv("LLAMA_URL","");LLAMA=("http://"+LLAMA) if LLAMA and not LLAMA.s
 LIMIT=int(os.getenv("RATE_LIMIT","60"));MAXROWS=5000
 app=FastAPI(title="Dawn Chorus Pro",docs_url=None,redoc_url=None);app.add_middleware(GZipMiddleware,minimum_size=800)
 hits=collections.defaultdict(collections.deque)
-CSP="default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+CSP="default-src 'self'; media-src 'self' https://xeno-canto.org blob:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
 @app.middleware("http")
 async def guard(req:Request,call):
     if req.url.path.startswith("/api/"):
