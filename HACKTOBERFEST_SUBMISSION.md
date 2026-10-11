@@ -1,7 +1,7 @@
 ---
-title: Dawn Chorus Pro: A Bird Walk with Your Phone in Your Pocket (Powered by Gemma & Render)
-published: false
-description: An offline-first bird call verifier and field journal generator built by a student for the Hacktoberfest Touch Grass Challenge.
+title: Dawn Chorus Pro: Bird Identification With Your Phone in Your Pocket (Gemma + Render)
+published: true
+description: An offline-first bird call verifier and field journal generator built for the Hacktoberfest Touch Grass Challenge.
 tags: devchallenge, hf26challenge, opensource, ai
 ---
 
@@ -11,121 +11,95 @@ tags: devchallenge, hf26challenge, opensource, ai
 
 ## What I Built
 
-Hi everyone! As a student developer, I love going for early morning walks and hikes, but I noticed a big problem with modern nature apps: **everyone is staring at their phone screens instead of enjoying nature.**
+**Dawn Chorus Pro** is a lightweight tool for hikers and nature lovers that gets you **off your phone and into nature**.
 
-Whenever a bird sings from a tree, people stop in their tracks, take out their phones, wait for weak cell signal, and scroll through menus. Not only does this ruin the outdoor experience, but raw acoustic apps often make mistakes—flagging winter birds in the middle of summer or mistaking wind noise for rare species.
+### The Problem
+When people go birdwatching, they stare at screens trying to identify calls in real-time. This ruins the walk, drains battery, and often gives false positives because raw sound classifiers get confused by wind or traffic.
 
-So for the **"Touch Grass"** challenge, I built **Dawn Chorus Pro**.
+### The Solution: "Touch Grass First, Check Later"
+- **During the walk:** Keep your phone in your pocket, record the morning bird sounds, and just enjoy the hike.
+- **After the walk:** Upload your acoustic log (BirdNET CSV).
+- **Smart Filtering:** The app checks each detection against local seasonal and morning-hour data, dropping false positives and keeping only verified birds.
+- **Listen & Learn:** Click any bird on an interactive visual timeline to hear genuine calls from Xeno-canto.
+- **AI Field Journal:** Google's **Gemma 3 1B** model writes a clean, naturalist summary of your hike.
 
-The idea is simple: **Keep your phone in your pocket during the walk.**
-1. You go outside, record the ambient sounds of the morning, and just enjoy the walk.
-2. When you come home, you feed the acoustic logs (like BirdNET CSV exports) into Dawn Chorus Pro.
-3. The app checks each detection against local seasonal and hourly species data to eliminate false positives (reaching 100% precision on our benchmark).
-4. You get an interactive visual timeline where you can click on any bird name to listen to real reference calls fetched from Xeno-canto.
-5. Finally, Google's open-weight **Gemma 3 1B** model writes a beautiful, natural field journal summarizing your walk.
-
-The screen is the **shortest** part of the experience—it only takes 1 minute to review what you heard on a 45-minute nature walk!
+Screen time is kept to just **1 minute** after a 45-minute outdoor walk!
 
 ---
 
 ## Demo
 
 - **GitHub Repository**: [https://github.com/Anurag-tech22/Down-Chorus](https://github.com/Anurag-tech22/Down-Chorus)
-- **Live Deployed App (Render)**: [https://dawn-chorus.onrender.com](https://dawn-chorus.onrender.com) *(or run locally with Docker)*
+- **Live Deployed App (Render)**: [https://dawn-chorus.onrender.com](https://dawn-chorus.onrender.com)
 
-### Running It Locally (No internet or API keys needed):
+### Run It Locally in 1 Step (Offline):
 ```bash
 git clone https://github.com/Anurag-tech22/Down-Chorus.git
 cd Down-Chorus
 docker compose up --build
 ```
-Open `http://localhost:8000` in your browser and click **"Try the sample walk"** to see the timeline, audio playback, and journal in action!
+Open `http://localhost:8000` and click **"Try the sample walk"**.
 
 ---
 
 ## Code
 
-All code is open-source under the MIT license on GitHub:
-
 {% github Anurag-tech22/Down-Chorus %}
 
-Here is the project structure I built:
-- `app/species.py` & `app/verify.py`: Mathematical priors that check if a bird is realistic for the region, month, and morning hours.
-- `app/journal.py`: Prompts Google's Gemma model and validates the output with Python code so it never drops or hallucinates bird names.
-- `app/main.py`: Fast Python backend with FastAPI, rate limiting, and safe audio routing.
-- `app/static/`: Pure HTML, modern CSS, and vanilla JavaScript SVG timeline (fast, zero heavy chart libraries).
-- `render.yaml`: Blueprint to deploy both the web application and the private Gemma container on Render.
+**Main parts of the project:**
+- `app/species.py` & `app/verify.py`: Mathematical filter that verifies birds based on region, season, and time of day.
+- `app/journal.py`: Calls Gemma 3 1B with a strict validation check so it never hallucinates fake species.
+- `app/main.py`: Fast, secure FastAPI backend with audio streaming and rate limiting.
+- `app/static/`: Interactive timeline built with pure HTML, CSS, and SVG (0 heavy chart libraries).
+- `render.yaml`: Infrastructure blueprint for Render.
 
 ---
 
 ## How I Built It
 
-I wanted this to be a real, production-ready tool that runs on open-source AI:
-
-```
-[Morning Walk Outside] 
-        ↓ (Ambient Audio)
-[BirdNET Acoustic Detections] 
-        ↓ (CSV export)
-[Dawn Chorus Verification Engine] 
-   ├── Drops out-of-season / out-of-region false positives
-   ├── Flags rare birds as "Listen again"
-   └── Keeps verified detections
-        ↓
-[Google Gemma 3 1B (Local Inference via Ollama / llama.cpp)]
-        ↓
-[Field Journal Synthesis + Audio Playback from Xeno-canto]
-```
-
-### 1. Spatio-Temporal Prior Filter
-Raw sound classifiers often get fooled by city background sounds. I created a Bayesian filter in Python that scores detections based on:
-- **Season**: Is this bird actually breeding here in June, or is it a winter migrant?
-- **Time of Day**: Does this species call at 5:30 AM during the dawn chorus?
-If the score is too low, it gets dropped or flagged as "listen again."
-
-### 2. Open-Weight AI with Google Gemma 3 1B
-For the field journal, I didn't want to use paid closed APIs. I used **Google's Gemma 3 1B** (`gemma3:1b` / `gemma-3-1b-it-Q4_K_M.gguf`):
-- It is small enough (under 1 GB) to run directly on a student laptop or edge device with llama-server or Ollama.
-- **Zero-Hallucination Guardrail**: I wrote a check in `app/journal.py` that verifies Gemma kept every single bird name without inventing fake ones. If the model makes a mistake, it automatically falls back to a clean template.
-
-### 3. Comprehensive Testing
-I wrote 16 automated unit tests with `pytest` covering security headers, rate limiting, and Gemma validation. All 16 tests pass in a few seconds!
+1. **Acoustic Verification:** Instead of blindly trusting sound models, the Python backend scores each bird against seasonal presence (e.g. is this bird actually here in June?) and morning chorus activity.
+2. **Open-Weight Gemma 3 1B:** Runs completely offline via Ollama or `llama-server`. It takes raw bird names and writes a warm journal entry. A Python check verifies that all species names are kept exactly; if not, it safely falls back to a clean template.
+3. **Automated Testing:** 16 unit tests covering security headers, rate limits, and LLM verification pass in ~5 seconds.
 
 ---
 
 ## Why Does Open Innovation Matter?
 
-As a student, open innovation and open-weight AI completely changed what I could build:
+1. **Trail Ready (No Signal):** Dense woods and mountains have zero cell reception. Open-weight Gemma runs directly on your laptop with no internet connection.
+2. **Zero Cost for Students:** No expensive API keys or monthly token subscriptions—it costs $0 to run forever.
+3. **Privacy:** Sensitive wildlife coordinates stay on your machine rather than being uploaded to third-party cloud servers.
 
-1. **Trail Ready (Works with 0 Internet)**: When hiking in dense forests or hills, closed cloud APIs like ChatGPT or Claude don't work because there is no 4G/5G cell reception. Because Gemma is open-weight, I can run it directly on my laptop on the trail without any Wi-Fi.
-2. **Student-Friendly (No Expensive Subscriptions)**: I don't have money to pay for expensive monthly API keys or per-token fees. Open-source models mean free, unlimited inference forever.
-3. **Privacy and Conservation**: Bird watchers often find sensitive nesting sites of rare birds. Open-weight models ensure that coordinates and recording metadata stay private on your local machine rather than being uploaded to third-party cloud servers.
+---
+
+## My Agent Session
+
+Built with pair-programming assistance from Antigravity to architect the priors filter, containerize Gemma, and set up Render blueprints.
 
 ---
 
 ## Prize Categories
 
-I am submitting Dawn Chorus Pro for the following partner categories:
-
 ### 1. Best Use of Gemma ($200)
-- **Model**: Google Gemma 3 1B (`gemma3:1b` / `gemma-3-1b-it-Q4_K_M.gguf`).
-- **Implementation**: Used locally and offline to write naturalist journal entries from acoustic observations with custom Python guardrails to prevent dropped or hallucinated species.
+- Uses Google's open-weight **Gemma 3 1B** (`gemma3:1b` / GGUF).
+- Runs 100% locally and offline on personal hardware.
+- Includes Python guardrails against hallucinations.
 
 ### 2. Best Use of Render ($200)
-- **Implementation**: Configured a complete multi-service blueprint in [`render.yaml`](https://github.com/Anurag-tech22/Down-Chorus/blob/main/render.yaml) that sets up both the public web service and an isolated private container running Gemma using Render's private service networking.
+- Configured via [`render.yaml`](https://github.com/Anurag-tech22/Down-Chorus/blob/main/render.yaml) using Render's multi-service blueprint.
+- Sets up a public web app connected to a private background container for Gemma inference.
 
 ---
 
 ## 🌐 Community Wisdom
 
-While building this, learning from other developers on DEV was super helpful:
-- [Running Local LLMs with Docker and llama.cpp](https://dev.to) - helped me containerize Gemma with a small footprint.
-- [Building Environmental Audio Pipelines in Python](https://dev.to) - gave inspiration on handling acoustic classifications cleanly.
+References that helped shape this project:
+- [Running Local LLMs with Docker and llama.cpp](https://dev.to) - for small containerized inference.
+- [Environmental Audio Pipelines in Python](https://dev.to) - for acoustic verification principles.
 
 ---
 
 ## Conclusion
 
-Building Dawn Chorus Pro helped me learn how open-source AI and acoustic tools can work together to solve real problems. Instead of keeping us glued to our screens, AI can help us appreciate the natural world around us.
+Dawn Chorus Pro shows how open-source AI can help us connect with the real world rather than keeping us trapped on screens. 
 
-Next time you hear the birds at dawn, pocket your phone, listen, and **touch grass**!
+Put your phone in your pocket, listen to the birds, and **touch grass**!
